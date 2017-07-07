@@ -5,8 +5,4 @@ npm install
 npm start
 ```
 
-# Roadmap 
-
-- [x] Command manager utility 
-- [x] Message handling by salon (kind of rules...).
-- Success
+Fill `token` field in bot/configuration.json with a valid bot token.
