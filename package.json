@@ -1,0 +1,15 @@
+{
+  "name": "escommunity_bot",
+  "version": "1.0.0",
+  "description": "ES Community bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot/index.js"
+  },
+  "author": "fraxken",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.1.0"
+  }
+}
