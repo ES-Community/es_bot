@@ -5,4 +5,4 @@ npm install
 npm start
 ```
 
-Fill `token` field in bot/configuration.json with a valid bot token.
+Fill `token` field in config.prod.json with a valid bot token.

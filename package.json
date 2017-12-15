@@ -5,11 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bot/index.js"
+    "start": "node index.js"
   },
-  "author": "fraxken",
+  "author": "ES-Community",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.1.0"
+    "@sindresorhus/is": "^0.7.0",
+    "discord.js": "^11.2.1",
+    "twit": "^2.2.9"
+  },
+  "devDependencies": {
+    "ava": "^0.24.0"
   }
 }

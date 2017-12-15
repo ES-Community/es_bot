@@ -1,11 +1,24 @@
-// Require Packages!
-const Discord           = require('discord.js');
+'use strict';
+// @ts-check
+
+// Require Node Packages
 const event             = require('events');
-const CommandManager    = require('./core/command.js');
+
+// Require NPM Packages!
+const Discord           = require('discord.js');
+const Twit              = require('twit');
+
+// Require Internal Dependnecies
+const CommandManager    = require('./src/command.js');
+
+// Require Rules
+const RULE_Liens        = require('./rules/liens');
 
 // Require JSON configuration.
-const config    = require('./configuration.json');
+const config    = require('./config.dev.json');
 const varRegex  = /^!([a-z]+)\s*(.*)/;
+
+const TwitterAPI = new Twit(config.twitter);
 
 // Create Command manager!
 const CM = new CommandManager();
@@ -119,64 +132,64 @@ CM.addCommand('delrole',function({message,args}) {
 /*
  * Check global success or specific user(s) success!
  */
-CM.addCommand('success',function({message}) {
-    const mentions = message.mentions.members.array();
-    if(mentions.length > 0) {
+// CM.addCommand('success',function({message}) {
+//     const mentions = message.mentions.members.array();
+//     // if(mentions.length > 0) {
 
-    }
-    else {
+//     // }
+//     // else {
 
+//     // }
+// });
+
+let feedChannel;
+
+// Initialize tweeter feed on a specific channel !
+CM.addCommand('feedtweeter',function({message}) {
+    console.log('feedtweeter triggered!');
+    const { id } = message.guild.roles.find("name", "Moderateur");
+    
+    if(message.member.roles.has(id) === false) {
+        return message.reply(`Cet commande est réservé aux Modérateurs de la communauté !`);
     }
+    feedChannel = message.channel;
+    message.reply('La timeline tweeter à été initialisé sur le salon avec succès!');
 });
 
 /*
  * Help command
  */
 CM.addCommand('help',function({message}) {
-    const commands = CM.getRegisteredCommands();
-    message.reply(`All commands available are:\n\t${commands.join('\n\t')}`);
+    const commands = [...CM.getRegisteredCommands()];
+    message.reply(`All commands available are:\n\t${commands.join('\n')}`);
 });
 
-/*
- * Channels rules!
- */
+// Apply channel rules...
 const ChannelRules = new event(); 
-
-const linkMessageFormat = /^\*\*\[\s.*\s\]\*\*\s.*/;
-ChannelRules.on('links', (message) => {
-    if(message.content.match(linkMessageFormat) === true) return;
-
-    message.reply('Le format de votre message est invalide (Merci de le corriger). Exemple => **[ titre ]** Description')
-    .then( (warnMessage) => {
-        warnMessage.delete(20000);
-    });
-});
+ChannelRules.on(RULE_Liens.channelName, RULE_Liens.handler);
 
 /*
  *  message handler!
  */
 function messageHandler(message) {
-    const { channel: {name: channelName}, content } = message;
+    const { channel: {name: channelName}, content, member } = message;
 
     if(content[0] === config.command_char) {
         try {
             var [,cmd,argStr] = varRegex.exec(content);
+            // console.log(`cmd > ${cmd}, args: ${argStr}`);
+            return CM.handle(message, cmd, argStr.split(" "));
         }
         catch(E) {
-            console.log(E);
-            return;
+            return console.error(E);
         }
-        console.log(cmd,argStr);
-        const argumentsArray = argStr.split(" ");
-        CM.handle(message,cmd,argumentsArray);
-        return;
     }
 
-    console.log(channelName);
-    console.log(content);
-
-    // Apply channel rule!
-    //ChannelRules.emit(channelName,message);
+    // console.log(channelName);
+    // console.log(content);
+    // if (member.user.bot === false) {
+    //     ChannelRules.emit(channelName,message);
+    // }
 }
 
 /*
@@ -184,8 +197,24 @@ function messageHandler(message) {
  */
 const ESBot = new Discord.Client();
 
+// Twitter Account restrictions...
+const TwitterNames = new Set(config.twitter_users);
+
 ESBot.on('ready', () => {
     console.log('ES Community bot ready!!');
+    const stream = TwitterAPI.stream('statuses/filter', { track: ['nodejs','node_js','v8','ecmascript','javascript','npm','webpack'] });
+
+    stream.on('tweet', function (tweet) {
+        //console.log(tweet);
+        const { id_str , user: { screen_name }} = tweet;
+        if (!TwitterNames.has(screen_name)) return;
+        if (feedChannel) {
+            feedChannel.send(`https://twitter.com/${screen_name}/status/${id_str}`);
+        }
+    });
+    process.on('SIGINT', () => {
+        stream.stop();
+    });
 });
 
 ESBot.on('guildMemberAdd', member => {
@@ -194,7 +223,7 @@ ESBot.on('guildMemberAdd', member => {
 
 ESBot.on('message', messageHandler);
 ESBot.on('messageUpdate', messageHandler);
-ESBot.login(config.token);
+ESBot.login(config.discord.token);
 
 process.on('SIGINT', () => {
     ESBot.destroy();
