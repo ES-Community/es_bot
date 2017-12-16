@@ -7,6 +7,7 @@ const event             = require('events');
 // Require NPM Packages!
 const Discord           = require('discord.js');
 const Twit              = require('twit');
+const is                = require('@sindresorhus/is');
 
 // Require Internal Dependnecies
 const CommandManager    = require('./src/command.js');
@@ -146,14 +147,13 @@ let feedChannel;
 
 // Initialize tweeter feed on a specific channel !
 CM.addCommand('feedtweeter',function({message}) {
-    console.log('feedtweeter triggered!');
     const { id } = message.guild.roles.find("name", "Moderateur");
-    
+    message.delete();
     if(message.member.roles.has(id) === false) {
         return message.reply(`Cet commande est réservé aux Modérateurs de la communauté !`);
     }
     feedChannel = message.channel;
-    message.reply('La timeline tweeter à été initialisé sur le salon avec succès!');
+    feedChannel.send('Streaming de la timeline twitter initialisé avec succès!');
 });
 
 /*
@@ -202,12 +202,14 @@ const TwitterNames = new Set(config.twitter_users);
 
 ESBot.on('ready', () => {
     console.log('ES Community bot ready!!');
-    const stream = TwitterAPI.stream('statuses/filter', { track: ['nodejs','node_js','v8','ecmascript','javascript','npm','webpack'] });
+    const stream = TwitterAPI.stream('statuses/filter', { track: config.twitter_feeds });
 
     stream.on('tweet', function (tweet) {
         //console.log(tweet);
-        const { id_str , user: { screen_name }} = tweet;
+        const { id_str , retweeted_status, user: { screen_name }, in_reply_to_screen_name } = tweet;
         if (!TwitterNames.has(screen_name)) return;
+        if (in_reply_to_screen_name != null || is(retweeted_status) !== 'undefined') return;
+        console.log(JSON.stringify(tweet, null, 4));
         if (feedChannel) {
             feedChannel.send(`https://twitter.com/${screen_name}/status/${id_str}`);
         }

@@ -10,6 +10,27 @@
         "access_token_secret":  "",
         "timeout_ms":           60000
     },
+    "twitter_feeds": [
+        "nodejs",
+        "node_js",
+        "v8",
+        "ecmascript",
+        "javascript",
+        "npm",
+        "webpack",
+        "adonis",
+        "adonisframework",
+        "babel",
+        "eslint",
+        "typescript",
+        "angular",
+        "react",
+        "vuejs",
+        "chakracore",
+        "graphql",
+        "rxjs",
+        "libuv"
+    ],
     "twitter_users": [
         "jasnell",
         "mikeal",
@@ -76,6 +97,22 @@
         "trevnorris",
         "HackyGoLucky",
         "typescriptlang",
-        "npmjs"
+        "npmjs",
+        "tjholowaychuk",
+        "ChromiumDev",
+        "left_pad",
+        "adonisframework",
+        "romainlanz",
+        "fraxken",
+        "Xstoudi",
+        "nolanrigo",
+        "babeljs",
+        "wa7son",
+        "feross",
+        "thlorenz",
+        "GraphQL",
+        "reactjs",
+        "vuejs",
+        "angular"
     ]
 }
