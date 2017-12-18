@@ -49,7 +49,7 @@ const AdministratorRoles = new Set([
 ]);
 
 const UserRoles = new Set([
-    'Otaku'
+    'Twitter'
 ]);
 
 const STR_RolesException = [...UserRoles].join(', ');
@@ -59,20 +59,21 @@ const STR_RolesException = [...UserRoles].join(', ');
  */
 CM.addCommand('addrole',function({message,args}) {
     const [,...roles] = args;
-    const mentionnedUser = message.mentions.members.array()[0];
+    const [mentionnedUser] = message.mentions.members.array();
     const { id: moderatorRoleID } = message.guild.roles.find('name', 'Moderateur');
 
     if(message.member.roles.has(moderatorRoleID) === false) {
+        if(mentionnedUser.id !== message.member.id) {
+            return message.reply('Vous n\'êtes pas autoriser à attribuer des rôles à un autre utilisateur!');
+        }
         const goThrough = roles.every( roleName => UserRoles.has(roleName) );
         if(goThrough === false) {
-            message.reply(`Désolé pour utiliser la command **!addrole** il vous faut être modérateur. Sauf pour les rôles ${STR_RolesException}`);
-            return;
+            return message.reply(`Désolé pour utiliser la command **!addrole** il vous faut être modérateur. Sauf pour les rôles ${STR_RolesException}`);
         }
     }
 
     if(roles.length === 0) {
-        message.reply(`Merci de préciser au moins un rôle. Exemple : **!addrole** @userMention role1 role2 ...`);
-        return;
+        return message.reply(`Merci de préciser au moins un rôle. Exemple : **!addrole** @userMention role1 role2 ...`);
     }
 
     const rolesToAdd = [];
@@ -85,8 +86,7 @@ CM.addCommand('addrole',function({message,args}) {
     });
 
     if(rolesToAdd.length === 0) {
-        message.reply(`Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} possède déjà les rôle(s) en question.`);
-        return;
+        return message.reply(`Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} possède déjà les rôle(s) en question.`);
     }
     rolesToAdd.forEach( role => mentionnedUser.addRole(role.id) );
     const ret = roles.join(', ').replace('@','');
@@ -98,20 +98,21 @@ CM.addCommand('addrole',function({message,args}) {
  */
 CM.addCommand('delrole',function({message,args}) {
     const [,...roles] = args;
-    const mentionnedUser = message.mentions.members.array()[0];
+    const [mentionnedUser] = message.mentions.members.array();
     const { id: moderatorRoleID } = message.guild.roles.find("name", "Moderateur");
 
     if(message.member.roles.has(moderatorRoleID) === false) {
+        if(mentionnedUser.id !== message.member.id) {
+            return message.reply('Vous n\'êtes pas autoriser à attribuer des rôles à un autre utilisateur!');
+        }
         const goThrough = roles.every( roleName => UserRoles.has(roleName) );
         if(goThrough === false) {
-            message.reply(`Désolé pour utiliser la command **!delrole** il vous faut être modérateur. Sauf pour les rôles ${STR_RolesException}`);
-            return;
+            return message.reply(`Désolé pour utiliser la command **!delrole** il vous faut être modérateur. Sauf pour les rôles ${STR_RolesException}`);
         }
     }
 
     if(roles.length === 0) {
-        message.reply(`Merci de préciser au moins un rôle. Exemple : **!delrole** @userMention role1 role2 ...`);
-        return;
+        return message.reply(`Merci de préciser au moins un rôle. Exemple : **!delrole** @userMention role1 role2 ...`);
     }
 
     const rolesToDelete = [];
@@ -124,8 +125,7 @@ CM.addCommand('delrole',function({message,args}) {
     });
 
     if(rolesToDelete.length === 0) {
-        message.reply(`Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} ne possède pas les rôle(s) en question.`);
-        return;
+        return message.reply(`Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} ne possède pas les rôle(s) en question.`);
     }
     rolesToDelete.forEach( role => mentionnedUser.removeRole(role.id) );
     const ret = roles.join(', ').replace('@','');
