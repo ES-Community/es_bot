@@ -89,7 +89,8 @@ CM.addCommand('addrole',function({message,args}) {
         return;
     }
     rolesToAdd.forEach( role => mentionnedUser.addRole(role.id) );
-    message.reply(`Le ou les rôle(s) suivant : ${rolesToAdd.join(', ')} ont été ajouté sur ${mentionnedUser.displayName}`);
+    const ret = roles.join(', ').replace('@','');
+    message.reply(`Le ou les rôle(s) suivant : ${ret} ont été ajouté sur ${mentionnedUser.displayName}`);
 });
 
 /*
@@ -127,7 +128,8 @@ CM.addCommand('delrole',function({message,args}) {
         return;
     }
     rolesToDelete.forEach( role => mentionnedUser.removeRole(role.id) );
-    message.reply(`Le ou les rôle(s) suivant : ${rolesToDelete.join(', ')} ont été supprimé sur ${mentionnedUser.displayName}`);
+    const ret = roles.join(', ').replace('@','');
+    message.reply(`Le ou les rôle(s) suivant : ${ret} ont été supprimé sur ${mentionnedUser.displayName}`);
 });
 
 /*
@@ -206,10 +208,9 @@ ESBot.on('ready', () => {
 
     stream.on('tweet', function (tweet) {
         //console.log(tweet);
-        const { id_str , retweeted_status, user: { screen_name }, in_reply_to_screen_name } = tweet;
+        const { id_str , retweeted_status, user: { screen_name }, in_reply_to_screen_name, is_quote_status } = tweet;
         if (!TwitterNames.has(screen_name)) return;
-        if (in_reply_to_screen_name != null || is(retweeted_status) !== 'undefined') return;
-        console.log(JSON.stringify(tweet, null, 4));
+        if (in_reply_to_screen_name != null || is(retweeted_status) !== 'undefined' || is_quote_status === true) return;
         if (feedChannel) {
             feedChannel.send(`https://twitter.com/${screen_name}/status/${id_str}`);
         }
