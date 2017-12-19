@@ -13,6 +13,8 @@
     "twitter_feeds": [
         "nodejs",
         "node_js",
+        "wasm",
+        "webassembly",
         "v8",
         "ecmascript",
         "javascript",
@@ -25,11 +27,14 @@
         "typescript",
         "angular",
         "react",
+        "reactjs",
+        "vue",
         "vuejs",
         "chakracore",
         "graphql",
         "rxjs",
-        "libuv"
+        "libuv",
+        "tc39"
     ],
     "twitter_users": [
         "jasnell",
@@ -113,6 +118,15 @@
         "GraphQL",
         "reactjs",
         "vuejs",
-        "angular"
+        "angular",
+        "ReBeccaOrg",
+        "NodeConfEU",
+        "MSEdgeDev",
+        "WasmWeekly",
+        "svensauleau",
+        "hapijs",
+        "StrongLoop",
+        "JavaScriptKicks",
+        "JSKongress"
     ]
 }
