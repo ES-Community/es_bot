@@ -133,17 +133,11 @@ CM.addCommand('delrole',function({message,args}) {
 });
 
 /*
- * Check global success or specific user(s) success!
+ * DOC Feature
  */
-// CM.addCommand('success',function({message}) {
-//     const mentions = message.mentions.members.array();
-//     // if(mentions.length > 0) {
-
-//     // }
-//     // else {
-
-//     // }
-// });
+CM.addCommand('doc',function({message, args}) {
+    console.log(args);
+});
 
 let feedChannel;
 
@@ -179,8 +173,7 @@ function messageHandler(message) {
     if(content[0] === config.command_char) {
         try {
             var [,cmd,argStr] = varRegex.exec(content);
-            // console.log(`cmd > ${cmd}, args: ${argStr}`);
-            return CM.handle(message, cmd, argStr.split(" "));
+            return CM.handle(message, cmd, argStr.trim().split(" "));
         }
         catch(E) {
             return console.error(E);
