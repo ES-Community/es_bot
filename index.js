@@ -135,13 +135,12 @@ CM.addCommand('delrole',function({message,args}) {
 /*
  * DOC Feature
  */
-CM.addCommand('doc',function({message, args}) {
+CM.addCommand('doc',function({message, [namespace, doc]}) {
     console.log(args);
 });
 
-let feedChannel;
-
 // Initialize tweeter feed on a specific channel !
+let feedChannel;
 CM.addCommand('feedtweeter',function({message}) {
     const { id } = message.guild.roles.find("name", "Moderateur");
     message.delete();
@@ -157,7 +156,7 @@ CM.addCommand('feedtweeter',function({message}) {
  */
 CM.addCommand('help',function({message}) {
     const commands = [...CM.getRegisteredCommands()];
-    message.reply(`All commands available are:\n\t${commands.join('\n')}`);
+    message.reply(`All commands available are:\n!${commands.join('\n!')}`);
 });
 
 // Apply channel rules...
@@ -169,21 +168,17 @@ ChannelRules.on(RULE_Liens.channelName, RULE_Liens.handler);
  */
 function messageHandler(message) {
     const { channel: {name: channelName}, content, member } = message;
-
     if(content[0] === config.command_char) {
         try {
-            var [,cmd,argStr] = varRegex.exec(content);
-            return CM.handle(message, cmd, argStr.trim().split(" "));
+            const [,cmd,argStr] = varRegex.exec(content);
+            return CM.handle(message, cmd, argStr.split(" ").filter( v => v !== '' ) );
         }
         catch(E) {
             return console.error(E);
         }
     }
-
-    // console.log(channelName);
-    // console.log(content);
     // if (member.user.bot === false) {
-    //     ChannelRules.emit(channelName,message);
+    //     ChannelRules.emit(channelName, message);
     // }
 }
 
@@ -204,7 +199,7 @@ ESBot.on('ready', () => {
         const { id_str , retweeted_status, user: { screen_name }, in_reply_to_screen_name, is_quote_status } = tweet;
         if (!TwitterNames.has(screen_name)) return;
         if (in_reply_to_screen_name != null || is(retweeted_status) !== 'undefined' || is_quote_status === true) return;
-        if (feedChannel) {
+        if (is(feedChannel) !== 'undefined') {
             feedChannel.send(`https://twitter.com/${screen_name}/status/${id_str}`);
         }
     });
