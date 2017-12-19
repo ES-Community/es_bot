@@ -57,9 +57,14 @@ const STR_RolesException = [...UserRoles].join(', ');
 /*
  * Add user role
  */
-CM.addCommand('addrole',function({message,args}) {
-    const [,...roles] = args;
-    const [mentionnedUser] = message.mentions.members.array();
+CM.addCommand('addrole',function({ message, args: roles }) {
+    let [mentionnedUser] = message.mentions.members.array();
+    if(is(mentionnedUser) === 'undefined') {
+        mentionnedUser = message.member;
+    }
+    else {
+        roles.shift();
+    }
     const { id: moderatorRoleID } = message.guild.roles.find('name', 'Moderateur');
 
     if(message.member.roles.has(moderatorRoleID) === false) {
@@ -96,9 +101,14 @@ CM.addCommand('addrole',function({message,args}) {
 /*
  * Remove role
  */
-CM.addCommand('delrole',function({message,args}) {
-    const [,...roles] = args;
-    const [mentionnedUser] = message.mentions.members.array();
+CM.addCommand('delrole',function({ message, args: roles }) {
+    let [mentionnedUser] = message.mentions.members.array();
+    if(is(mentionnedUser) === 'undefined') {
+        mentionnedUser = message.member;
+    }
+    else {
+        roles.shift();
+    }
     const { id: moderatorRoleID } = message.guild.roles.find("name", "Moderateur");
 
     if(message.member.roles.has(moderatorRoleID) === false) {
