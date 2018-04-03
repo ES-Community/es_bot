@@ -1,298 +1,339 @@
 // Require Node Packages
-const event = require("events");
+const Event = require('events')
 
 // Require NPM Packages!
-const Discord = require("discord.js");
-const Twit = require("twit");
-const is = require("@sindresorhus/is");
+const Discord = require('discord.js')
+const Twit = require('twit')
+const is = require('@sindresorhus/is')
 
 // Require Internal Dependnecies
-const CommandManager = require("./src/command.js");
+const CommandManager = require('./src/command.js')
 
 // Require Rules
-const RULELiens = require("./rules/liens");
+const RULELiens = require('./src/rules/liens')
 
 // Require JSON configuration.
-const config = require("./config.dev.json");
-const varRegex = /^!([a-z]+)\s*(.*)/;
+const config = require('./config/config.dev.json')
+const varRegex = /^!([a-z]+)\s*(.*)/
 
-const TwitterAPI = new Twit(config.twitter);
+const TwitterAPI = new Twit(config.twitter)
 
 // Create Command manager!
-const CM = new CommandManager();
+const CM = new CommandManager()
 
 /*
  * Get user rôles...
  */
-CM.addCommand("role", function role({
-    message
+CM.addCommand('role', function role ({
+  message
 }) {
-    message.mentions.members.array().forEach((GuildMember) => {
-        if (GuildMember._roles.length > 0) {
-            const Roles = GuildMember._roles.map((id) => message.guild.roles.get(id).name);
-            message.reply(`Les rôle(s) de ${GuildMember.displayName} sont ${Roles.join(", ")}`);
-        }
-        else {
-            message.reply(`${GuildMember.displayName} ne possède aucun rôle!`);
-        }
-    });
-});
+  message.mentions.members.array().forEach((GuildMember) => {
+    if (GuildMember._roles.length > 0) {
+      const Roles = GuildMember._roles.map((id) => message.guild.roles.get(id).name)
+      message.reply(`Les rôle(s) de ${GuildMember.displayName} sont ${Roles.join(', ')}`)
+    } else {
+      message.reply(`${GuildMember.displayName} ne possède aucun rôle!`)
+    }
+  })
+})
 
 /*
  * Role(s) exceptions...
  */
 const AdministratorRoles = new Set([
-    "Administrateur", "Moderateur", "Bot"
-]);
+  'Administrateur', 'Moderateur', 'Bot'
+])
 
 const UserRoles = new Set([
-    "Twitter"
-]);
+  'Twitter'
+])
 
-const STRRolesException = [...UserRoles].join(", ");
+const STRRolesException = [...UserRoles].join(', ')
 
 /*
  * Add user role
  */
-CM.addCommand("addrole", function addrole({
-    message, args: roles
+CM.addCommand('addrole', function addrole ({
+  message, args: roles
 }) {
-    let [mentionnedUser] = message.mentions.members.array();
-    if (is(mentionnedUser) === "undefined") {
-        mentionnedUser = message.member;
-    }
-    else {
-        roles.shift();
-    }
-    const {
-        id: moderatorRoleID
-    } = message.guild.roles.find("name", "Moderateur");
+  let [mentionnedUser] = message.mentions.members.array()
+  if (is(mentionnedUser) === 'undefined') {
+    mentionnedUser = message.member
+  } else {
+    roles.shift()
+  }
+  const {
+    id: moderatorRoleID
+  } = message.guild.roles.find('name', 'Moderateur')
 
-    if (message.member.roles.has(moderatorRoleID) === false) {
-        if (mentionnedUser.id !== message.member.id) {
-            return message.reply("Vous n'êtes pas autoriser à attribuer des rôles à un autre utilisateur!");
-        }
-        const goThrough = roles.every((roleName) => UserRoles.has(roleName));
-        if (goThrough === false) {
-            return message.reply(`Désolé pour utiliser la command **!addrole** il vous faut être modérateur. Sauf pour les rôles ${STRRolesException}`);
-        }
+  if (message.member.roles.has(moderatorRoleID) === false) {
+    if (mentionnedUser.id !== message.member.id) {
+      return message.reply("Vous n'êtes pas autoriser à attribuer des rôles à un autre utilisateur!")
     }
-
-    if (roles.length === 0) {
-        return message.reply("Merci de préciser au moins un rôle. Exemple : **!addrole** @userMention role1 role2 ...");
+    const goThrough = roles.every((roleName) => UserRoles.has(roleName))
+    if (goThrough === false) {
+      return message.reply(`Désolé pour utiliser la command **!addrole** il vous faut être modérateur. Sauf pour les rôles ${STRRolesException}`)
     }
+  }
 
-    const rolesToAdd = [];
-    roles.forEach((roleName) => {
-        if (AdministratorRoles.has(roleName) === true) {
-            return;
-        }
-        const GuildRole = message.guild.roles.find("name", roleName);
-        if (is.nullOrUndefined(GuildRole)) {
-            return;
-        }
-        if (mentionnedUser.roles.has(GuildRole.id) === false) {
-            rolesToAdd.push(GuildRole);
-        }
-    });
+  if (roles.length === 0) {
+    return message.reply('Merci de préciser au moins un rôle. Exemple : **!addrole** @userMention role1 role2 ...')
+  }
 
-    if (rolesToAdd.length === 0) {
-        return message.reply(
-            `Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} possède déjà les rôle(s) en question.`
-        );
+  const rolesToAdd = []
+  roles.forEach((roleName) => {
+    if (AdministratorRoles.has(roleName) === true) {
+      return
     }
-    rolesToAdd.forEach((role) => mentionnedUser.addRole(role.id));
-    const ret = roles.join(", ").replace("@", "");
-    message.reply(`Le ou les rôle(s) suivant : ${ret} ont été ajouté sur ${mentionnedUser.displayName}`);
-});
+    const GuildRole = message.guild.roles.find('name', roleName)
+    if (is.nullOrUndefined(GuildRole)) {
+      return
+    }
+    if (mentionnedUser.roles.has(GuildRole.id) === false) {
+      rolesToAdd.push(GuildRole)
+    }
+  })
+
+  if (rolesToAdd.length === 0) {
+    return message.reply(
+      `Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} possède déjà les rôle(s) en question.`
+    )
+  }
+  rolesToAdd.forEach((role) => mentionnedUser.addRole(role.id))
+  const ret = roles.join(', ').replace('@', '')
+  message.reply(`Le ou les rôle(s) suivant : ${ret} ont été ajouté sur ${mentionnedUser.displayName}`)
+})
 
 /*
  * Remove role
  */
-CM.addCommand("delrole", function delrole({
-    message, args: roles
+CM.addCommand('delrole', function delrole ({
+  message, args: roles
 }) {
-    let [mentionnedUser] = message.mentions.members.array();
-    if (is(mentionnedUser) === "undefined") {
-        mentionnedUser = message.member;
+  let [mentionnedUser] = message.mentions.members.array()
+  if (is(mentionnedUser) === 'undefined') {
+    mentionnedUser = message.member
+  } else {
+    roles.shift()
+  }
+  const {
+    id: moderatorRoleID
+  } = message.guild.roles.find('name', 'Moderateur')
+
+  if (message.member.roles.has(moderatorRoleID) === false) {
+    if (mentionnedUser.id !== message.member.id) {
+      return message.reply("Vous n'êtes pas autoriser à déattribuer des rôles à un autre utilisateur!")
     }
-    else {
-        roles.shift();
+    const goThrough = roles.every((roleName) => UserRoles.has(roleName))
+    if (goThrough === false) {
+      return message.reply(`Désolé pour utiliser la command **!delrole** il vous faut être modérateur. Sauf pour les rôles ${STRRolesException}`)
     }
-    const {
-        id: moderatorRoleID
-    } = message.guild.roles.find("name", "Moderateur");
+  }
 
-    if (message.member.roles.has(moderatorRoleID) === false) {
-        if (mentionnedUser.id !== message.member.id) {
-            return message.reply("Vous n'êtes pas autoriser à déattribuer des rôles à un autre utilisateur!");
-        }
-        const goThrough = roles.every((roleName) => UserRoles.has(roleName));
-        if (goThrough === false) {
-            return message.reply(`Désolé pour utiliser la command **!delrole** il vous faut être modérateur. Sauf pour les rôles ${STRRolesException}`);
-        }
+  if (roles.length === 0) {
+    return message.reply('Merci de préciser au moins un rôle. Exemple : **!delrole** @userMention role1 role2 ...')
+  }
+
+  const rolesToDelete = []
+  roles.forEach((roleName) => {
+    if (AdministratorRoles.has(roleName) === true) {
+      return
     }
-
-    if (roles.length === 0) {
-        return message.reply("Merci de préciser au moins un rôle. Exemple : **!delrole** @userMention role1 role2 ...");
+    const GuildRole = message.guild.roles.find('name', roleName)
+    if (is.nullOrUndefined(GuildRole)) {
+      return
     }
-
-    const rolesToDelete = [];
-    roles.forEach((roleName) => {
-        if (AdministratorRoles.has(roleName) === true) {
-            return;
-        }
-        const GuildRole = message.guild.roles.find("name", roleName);
-        if (is.nullOrUndefined(GuildRole)) {
-            return;
-        }
-        if (mentionnedUser.roles.has(GuildRole.id) === true) {
-            rolesToDelete.push(GuildRole);
-        }
-    });
-
-    if (rolesToDelete.length === 0) {
-        return message.reply(`Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} ne possède pas les rôle(s) en question.`);
+    if (mentionnedUser.roles.has(GuildRole.id) === true) {
+      rolesToDelete.push(GuildRole)
     }
-    rolesToDelete.forEach((role) => mentionnedUser.removeRole(role.id));
-    const ret = roles.join(", ").replace("@", "");
-    message.reply(`Le ou les rôle(s) suivant : ${ret} ont été supprimé sur ${mentionnedUser.displayName}`);
-});
+  })
 
-const DocumentationLinks = new Map();
-DocumentationLinks.set("node", new Map([
-    ["assert", "https://nodejs.org/api/assert.html"], ["buffer", "https://nodejs.org/api/buffer.html"], ["addons", "https://nodejs.org/api/addons.html"], ["async_hooks", "https://nodejs.org/api/async_hooks.html"], ["n-api", "https://nodejs.org/api/n-api.html"], ["child_process", "https://nodejs.org/api/child_process.html"], ["cluster", "https://nodejs.org/api/cluster.html"], ["cli", "https://nodejs.org/api/cli.html"], ["console", "https://nodejs.org/api/console.html"], ["crypto", "https://nodejs.org/api/crypto.html"], ["debugger", "https://nodejs.org/api/debugger.html"], ["deprecations", "https://nodejs.org/api/deprecations.html"], ["dns", "https://nodejs.org/api/dns.html"], ["esm", "https://nodejs.org/api/esm.html"], ["errors", "https://nodejs.org/api/errors.html"], ["events", "https://nodejs.org/api/events.html"], ["fs", "https://nodejs.org/api/fs.html"], ["globals", "https://nodejs.org/api/globals.html"], ["http", "https://nodejs.org/api/http.html"], ["http2", "https://nodejs.org/api/http2.html"], ["https", "https://nodejs.org/api/https.html"], ["inspector", "https://nodejs.org/api/inspector.html"], ["intl", "https://nodejs.org/api/intl.html"], ["modules", "https://nodejs.org/api/modules.html"], ["net", "https://nodejs.org/api/net.html"], ["os", "https://nodejs.org/api/os.html"], ["path", "https://nodejs.org/api/path.html"], ["perf_hooks", "https://nodejs.org/api/perf_hooks.html"], ["process", "https://nodejs.org/api/process.html"], ["querystring", "https://nodejs.org/api/querystring.html"], ["readline", "https://nodejs.org/api/readline.html"], ["repl", "https://nodejs.org/api/repl.html"], ["stream", "https://nodejs.org/api/stream.html"], ["string_decoder", "https://nodejs.org/api/string_decoder.html"], ["timers", "https://nodejs.org/api/timers.html"], ["tls", "https://nodejs.org/api/tls.html"], ["tracing", "https://nodejs.org/api/tracing.html"], ["tty", "https://nodejs.org/api/tty.html"], ["dgram", "https://nodejs.org/api/dgram.html"], ["url", "https://nodejs.org/api/url.html"], ["util", "https://nodejs.org/api/util.html"], ["vm", "https://nodejs.org/api/vm.html"], ["zlib", "https://nodejs.org/api/zlib.html"], ["event-loop", "https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/"], ["guides", "https://nodejs.org/en/docs/guides/"]
-]));
+  if (rolesToDelete.length === 0) {
+    return message.reply(`Il semble que le ou les rôle(s) que vous avez mentionné n'existent pas. Il se peut aussi que ${mentionnedUser.displayName} ne possède pas les rôle(s) en question.`)
+  }
+  rolesToDelete.forEach((role) => mentionnedUser.removeRole(role.id))
+  const ret = roles.join(', ').replace('@', '')
+  message.reply(`Le ou les rôle(s) suivant : ${ret} ont été supprimé sur ${mentionnedUser.displayName}`)
+})
 
-DocumentationLinks.set("js", new Map([
-    ["array", "https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array"], ["map", "https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Map"]
-]));
+const DocumentationLinks = new Map()
+DocumentationLinks.set('node', new Map([
+  ['assert', 'https://nodejs.org/api/assert.html'],
+  ['buffer', 'https://nodejs.org/api/buffer.html'],
+  ['addons', 'https://nodejs.org/api/addons.html'],
+  ['async_hooks', 'https://nodejs.org/api/async_hooks.html'],
+  ['n-api', 'https://nodejs.org/api/n-api.html'],
+  ['child_process', 'https://nodejs.org/api/child_process.html'],
+  ['cluster', 'https://nodejs.org/api/cluster.html'],
+  ['cli', 'https://nodejs.org/api/cli.html'],
+  ['console', 'https://nodejs.org/api/console.html'],
+  ['crypto', 'https://nodejs.org/api/crypto.html'],
+  ['debugger', 'https://nodejs.org/api/debugger.html'],
+  ['deprecations', 'https://nodejs.org/api/deprecations.html'],
+  ['dns', 'https://nodejs.org/api/dns.html'],
+  ['esm', 'https://nodejs.org/api/esm.html'],
+  ['errors', 'https://nodejs.org/api/errors.html'],
+  ['events', 'https://nodejs.org/api/events.html'],
+  ['fs', 'https://nodejs.org/api/fs.html'],
+  ['globals', 'https://nodejs.org/api/globals.html'],
+  ['http', 'https://nodejs.org/api/http.html'],
+  ['http2', 'https://nodejs.org/api/http2.html'],
+  ['https', 'https://nodejs.org/api/https.html'],
+  ['inspector', 'https://nodejs.org/api/inspector.html'],
+  ['intl', 'https://nodejs.org/api/intl.html'],
+  ['modules', 'https://nodejs.org/api/modules.html'],
+  ['net', 'https://nodejs.org/api/net.html'],
+  ['os', 'https://nodejs.org/api/os.html'],
+  ['path', 'https://nodejs.org/api/path.html'],
+  ['perf_hooks', 'https://nodejs.org/api/perf_hooks.html'],
+  ['process', 'https://nodejs.org/api/process.html'],
+  ['querystring', 'https://nodejs.org/api/querystring.html'],
+  ['readline', 'https://nodejs.org/api/readline.html'],
+  ['repl', 'https://nodejs.org/api/repl.html'],
+  ['stream', 'https://nodejs.org/api/stream.html'],
+  ['string_decoder', 'https://nodejs.org/api/string_decoder.html'],
+  ['timers', 'https://nodejs.org/api/timers.html'],
+  ['tls', 'https://nodejs.org/api/tls.html'],
+  ['tracing', 'https://nodejs.org/api/tracing.html'],
+  ['tty', 'https://nodejs.org/api/tty.html'],
+  ['dgram', 'https://nodejs.org/api/dgram.html'],
+  ['url', 'https://nodejs.org/api/url.html'],
+  ['util', 'https://nodejs.org/api/util.html'],
+  ['vm', 'https://nodejs.org/api/vm.html'],
+  ['zlib', 'https://nodejs.org/api/zlib.html'],
+  ['event-loop', 'https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/'],
+  ['guides', 'https://nodejs.org/en/docs/guides/']
+]))
+
+DocumentationLinks.set('js', new Map([
+  ['array', 'https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array'],
+  ['map', 'https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Map']
+]))
 
 /*
  * DOC Feature
  */
-CM.addCommand("doc", function doc({
-    message, args: [namespace, docName]
+CM.addCommand('doc', function doc ({
+  message, args: [namespace, docName]
 }) {
-    if (is(namespace) !== "string") {
-        return message.reply(`Le nom de la documentation est invalide! Exemple: !doc ${[...DocumentationLinks.keys()].join("|")}`);
-    }
-    namespace = namespace.toLowerCase();
-    if (!DocumentationLinks.has(namespace)) {
-        return message.reply(`La documentation ${namespace} n'existe pas. Les documentations existantes sont : ${[...DocumentationLinks.keys()].join(", ")}`);
-    }
-    if (is(docName) !== "string") {
-        return message.reply(`Liste complète des clés qui sont possible pour la doc ${namespace} : ${[...DocumentationLinks.get(namespace).keys()].join(", ")}`);
-    }
-    docName = docName.toLowerCase();
-    if (!DocumentationLinks.get(namespace).has(docName)) {
-        return message.reply(`La documentation de ${namespace} ne possède pas de liens pour ${docName}.`);
-    }
+  if (is(namespace) !== 'string') {
+    return message.reply(`Le nom de la documentation est invalide! Exemple: !doc ${[...DocumentationLinks.keys()].join('|')}`)
+  }
+  namespace = namespace.toLowerCase()
+  if (!DocumentationLinks.has(namespace)) {
+    return message.reply(`La documentation ${namespace} n'existe pas. Les documentations existantes sont : ${[...DocumentationLinks.keys()].join(', ')}`)
+  }
+  if (is(docName) !== 'string') {
+    return message.reply(`Liste complète des clés qui sont possible pour la doc ${namespace} : ${[...DocumentationLinks.get(namespace).keys()].join(', ')}`)
+  }
+  docName = docName.toLowerCase()
+  if (!DocumentationLinks.get(namespace).has(docName)) {
+    return message.reply(`La documentation de ${namespace} ne possède pas de liens pour ${docName}.`)
+  }
 
-    return message.channel.send(DocumentationLinks.get(namespace).get(docName));
-});
+  return message.channel.send(DocumentationLinks.get(namespace).get(docName))
+})
 
 // Initialize tweeter feed on a specific channel !
-let feedChannel;
-CM.addCommand("feedtweeter", function feedtweeter({ message }) {
-    const {
-        id
-    } = message.guild.roles.find("name", "Moderateur");
-    message.delete();
-    if (message.member.roles.has(id) === false) {
-        return message.reply("Cet commande est réservé aux Modérateurs de la communauté !");
-    }
-    feedChannel = message.channel;
-    feedChannel.send("Streaming de la timeline twitter initialisé avec succès!");
-});
+let feedChannel
+CM.addCommand('feedtweeter', function feedtweeter ({ message }) {
+  const {
+    id
+  } = message.guild.roles.find('name', 'Moderateur')
+  message.delete()
+  if (message.member.roles.has(id) === false) {
+    return message.reply('Cet commande est réservé aux Modérateurs de la communauté !')
+  }
+  feedChannel = message.channel
+  feedChannel.send('Streaming de la timeline twitter initialisé avec succès!')
+})
 
 /*
  * Help command
  */
-CM.addCommand("help", function help({ message }) {
-    const commands = [...CM.getRegisteredCommands()];
-    message.channel.send(`All commands available are:\n!${commands.join("\n!")}`);
-});
+CM.addCommand('help', function help ({ message }) {
+  const commands = [...CM.getRegisteredCommands()]
+  message.channel.send(`All commands available are:\n!${commands.join('\n!')}`)
+})
 
 // Apply channel rules...
-const ChannelRules = new event();
-ChannelRules.on(RULELiens.channelName, RULELiens.handler);
+const ChannelRules = new Event()
+ChannelRules.on(RULELiens.channelName, RULELiens.handler)
 
 /*
  *  message handler!
  */
-function messageHandler(message) {
-    const {
-        channel: {
-            name: channelName
-        },
-        content,
-        member
-    } = message;
-    if (content[0] === config.command_char) {
-        try {
-            const [, cmd, argStr] = varRegex.exec(content);
+function messageHandler (message) {
+  const {
+    channel: {
+      name: channelName
+    },
+    content,
+    member
+  } = message
+  if (content[0] === config.command_char) {
+    try {
+      const [, cmd, argStr] = varRegex.exec(content)
 
-            return CM.handle(message, cmd, argStr.split(" ").filter((val) => val !== ""));
-        }
-        catch (error) {
-            return console.error(error);
-        }
+      return CM.handle(message, cmd, argStr.split(' ').filter((val) => val !== ''))
+    } catch (error) {
+      return console.error(error)
     }
-    // if (member.user.bot === false) {
-    //     ChannelRules.emit(channelName, message);
-    // }
+  }
+  // if (member.user.bot === false) {
+  //     ChannelRules.emit(channelName, message);
+  // }
 }
 
 /*
  * Create Discord bot!
  */
-const ESBot = new Discord.Client();
+const ESBot = new Discord.Client()
 
 // Twitter Account restrictions...
-const TwitterNames = new Set(config.twitter_users);
+const TwitterNames = new Set(config.twitter_users)
 
-ESBot.on("ready", () => {
-    console.log("ES Community bot ready!!");
-    const stream = TwitterAPI.stream("statuses/filter", {
-        track: config.twitter_feeds
-    });
+ESBot.on('ready', () => {
+  console.log('ES Community bot ready!!')
+  const stream = TwitterAPI.stream('statuses/filter', {
+    track: config.twitter_feeds
+  })
 
-    stream.on("tweet", function tweet(tweet) {
-        // console.log(tweet);
-        const {
-            idStr,
-            retweetedStatus,
-            user: {
-                screenName
-            },
-            inReplyToScreenName,
-            isQuoteStatus
-        } = tweet;
-        if (!TwitterNames.has(screenName)) {
-            return;
-        }
-        if (!is.nullOrUndefined(inReplyToScreenName) || is(retweetedStatus) !== "undefined" || isQuoteStatus === true) {
-            return;
-        }
-        if (is(feedChannel) !== "undefined") {
-            feedChannel.send(`https://twitter.com/${screenName}/status/${idStr}`);
-        }
-    });
-    process.on("SIGINT", () => {
-        stream.stop();
-    });
-});
+  stream.on('tweet', function tweet (tweet) {
+    // console.log(tweet);
+    const {
+      idStr,
+      retweetedStatus,
+      user: {
+        screenName
+      },
+      inReplyToScreenName,
+      isQuoteStatus
+    } = tweet
+    if (!TwitterNames.has(screenName)) {
+      return
+    }
+    if (!is.nullOrUndefined(inReplyToScreenName) || is(retweetedStatus) !== 'undefined' || isQuoteStatus === true) {
+      return
+    }
+    if (is(feedChannel) !== 'undefined') {
+      feedChannel.send(`https://twitter.com/${screenName}/status/${idStr}`)
+    }
+  })
+  process.on('SIGINT', () => {
+    stream.stop()
+  })
+})
 
-ESBot.on("guildMemberAdd", (member) => {
-    member.sendMessage("Bienvenue à toi ! Pense à te présenter dans le salon #presentation pour pouvoir devenir un membre officiel de la communauté ECMAScript !");
-});
+ESBot.on('guildMemberAdd', (member) => {
+  member.sendMessage('Bienvenue à toi ! Pense à te présenter dans le salon #presentation pour pouvoir devenir un membre officiel de la communauté ECMAScript !')
+})
 
-ESBot.on("message", messageHandler);
-ESBot.on("messageUpdate", messageHandler);
-ESBot.login(config.discord.token);
+ESBot.on('message', messageHandler)
+ESBot.on('messageUpdate', messageHandler)
+ESBot.login(config.discord.token)
 
-process.on("SIGINT", () => {
-    ESBot.destroy();
-});
-console.log("ES Community node server started!");
+process.on('SIGINT', () => {
+  ESBot.destroy()
+})
+console.log('ES Community node server started!')
