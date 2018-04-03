@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@escommunity/minami": "^1.0.0",
-    "ava": "^0.24.0"
+    "ava": "^0.24.0",
+    "eslint": "^4.19.1"
   }
 }

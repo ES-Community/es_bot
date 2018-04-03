@@ -3,9 +3,6 @@
         "es6": true,
         "node": true
     },
-    "ecmaFeatures": {
-        "impliedStrict": true
-    },
     "parserOptions": {
         "ecmaVersion": 8,
         "sourceType": "module"
@@ -54,7 +51,6 @@
         "array-callback-return": "error",
         "block-scoped-var": "error",
         "class-methods-use-this": "error",
-        "consistent-return": "error",
         "curly": "error",
         "default-case": "error",
         "dot-location": [
@@ -88,12 +84,6 @@
         "no-multi-str": "error",
         "no-new": "warn",
         "no-new-func": "error",
-        "no-param-reassign": [
-            "error",
-            {
-                "props": false
-            }
-        ],
         "no-proto": "error",
         "no-return-assign": "error",
         "no-self-compare": "error",
@@ -111,10 +101,6 @@
         "callback-return": "error",
         "no-sync": "error",
         "array-bracket-spacing": [
-            "error",
-            "never"
-        ],
-        "array-element-newline": [
             "error",
             "never"
         ],
@@ -201,13 +187,6 @@
             "error",
             4
         ],
-        "max-len": [
-            "error",
-            {
-                "code": 100,
-                "comments": 120
-            }
-        ],
         "max-lines": [
             "error",
             {
@@ -236,10 +215,6 @@
         "no-trailing-spaces": "warn",
         "no-unneeded-ternary": "error",
         "no-whitespace-before-property": "error",
-        "object-curly-newline": [
-            "error",
-            "always"
-        ],
         "object-curly-spacing": [
             "error",
             "always"
@@ -288,13 +263,7 @@
         ],
         "space-in-parens": [
             "error",
-            "always",
-            {
-                "exceptions": [
-                    "{}",
-                    "[]"
-                ]
-            }
+            "never"
         ],
         "space-infix-ops": "error",
         "space-unary-ops": "error",

@@ -1,17 +1,14 @@
-'use strict';
-// @ts-check
-
 // Require Node.JS Dependencies
-const events = require('events');
+const events = require("events");
 
 // Require NPM Dependencies
-const is = require('@sindresorhus/is');
+const is = require("@sindresorhus/is");
 
 /**
  * @class CommandManager
  * @classdesc Manage Discord command!
  * @extends events
- * 
+ *
  * @property {Map<String,Function>} commandsRegistery
  */
 class CommandManager extends events {
@@ -29,23 +26,23 @@ class CommandManager extends events {
      * @method addCommand
      * @desc Add a new command to the bot
      * @memberof CommandManager#
-     * 
-     * @param {!String} commandName 
-     * @param {!Function} callback 
-     * 
+     *
+     * @param {!String} commandName commandName
+     * @param {!Function} callback callback to execute
+     *
      * @return {void}
      * @throws {TypeError}
      */
     addCommand(commandName, callback) {
-        if (is(commandName) !== 'string') {
-            throw new TypeError('commandName should be typeof String');
+        if (is(commandName) !== "string") {
+            throw new TypeError("commandName should be typeof String");
         }
-        if (is(callback) !== 'Function') {
-            throw new TypeError('callback should be instanceof Function');
+        if (is(callback) !== "Function") {
+            throw new TypeError("callback should be instanceof Function");
         }
         const fullCMDName = `command_${commandName}`;
         this.commandsRegistery.set(commandName, fullCMDName);
-        this.on(fullCMDName,callback);
+        this.on(fullCMDName, callback);
     }
 
     /**
@@ -53,7 +50,7 @@ class CommandManager extends events {
      * @method getRegisteredCommands
      * @desc Get the list of all commands registered
      * @memberof CommandManager#
-     * 
+     *
      * @return {String[]}
      */
     getRegisteredCommands() {
@@ -65,11 +62,11 @@ class CommandManager extends events {
      * @method getRegisteredCommands
      * @desc Get the list of all commands registered
      * @memberof CommandManager#
-     * 
-     * @param {!Object} message 
-     * @param {!String} commandName 
-     * @param {!any} args 
-     * 
+     *
+     * @param {!Object} message message to handle
+     * @param {!String} commandName commandName (str) to find
+     * @param {!any} args commands arguments for the callback
+     *
      * @return {void}
      */
     handle(message, commandName, args) {
