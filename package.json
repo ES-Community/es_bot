@@ -11,10 +11,11 @@
   "license": "MIT",
   "dependencies": {
     "@sindresorhus/is": "^0.7.0",
-    "discord.js": "^11.2.1",
+    "discord.js": "^11.3.2",
     "twit": "^2.2.9"
   },
   "devDependencies": {
+    "@escommunity/minami": "^1.0.0",
     "ava": "^0.24.0"
   }
 }
