@@ -13,7 +13,7 @@ const CommandManager = require('./src/command.js')
 const RULELiens = require('./src/rules/liens')
 
 // Require JSON configuration.
-const config = require('./config/config.dev.json')
+const config = require('./config/prod.json')
 const varRegex = /^!([a-z]+)\s*(.*)/
 
 const TwitterAPI = new Twit(config.twitter)
@@ -41,11 +41,12 @@ CM.addCommand('role', function role ({
  * Role(s) exceptions...
  */
 const AdministratorRoles = new Set([
-  'Administrateur', 'Moderateur', 'Bot'
+  'Fondateur', 'Mentor', 'Bot'
 ])
 
 const UserRoles = new Set([
-  'Twitter'
+  'Twitter',
+  'NodeSchool'
 ])
 
 const STRRolesException = [...UserRoles].join(', ')
@@ -64,7 +65,7 @@ CM.addCommand('addrole', function addrole ({
   }
   const {
     id: moderatorRoleID
-  } = message.guild.roles.find('name', 'Moderateur')
+  } = message.guild.roles.find('name', 'Mentor')
 
   if (message.member.roles.has(moderatorRoleID) === false) {
     if (mentionnedUser.id !== message.member.id) {
@@ -118,7 +119,7 @@ CM.addCommand('delrole', function delrole ({
   }
   const {
     id: moderatorRoleID
-  } = message.guild.roles.find('name', 'Moderateur')
+  } = message.guild.roles.find('name', 'Mentor')
 
   if (message.member.roles.has(moderatorRoleID) === false) {
     if (mentionnedUser.id !== message.member.id) {
@@ -239,7 +240,7 @@ let feedChannel
 CM.addCommand('feedtweeter', function feedtweeter ({ message }) {
   const {
     id
-  } = message.guild.roles.find('name', 'Moderateur')
+  } = message.guild.roles.find('name', 'Mentor')
   message.delete()
   if (message.member.roles.has(id) === false) {
     return message.reply('Cet commande est réservé aux Modérateurs de la communauté !')
