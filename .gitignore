@@ -58,4 +58,4 @@ typings/
 .env
 .vscode
 
-config/dev.json
+./config/dev.json
