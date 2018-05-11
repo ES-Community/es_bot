@@ -26,10 +26,10 @@ ESBot.on('ready', () => {
 
 ESBot.on('guildMemberAdd', member => {
   member.send(welcomeEmbed)
-  ESBot.channels.find('name', 'logs').send(joinLeftEmbed.join(member.nickname))
+  ESBot.channels.find('name', 'bot').send(joinLeftEmbed.join(member.nickname))
 })
 ESBot.on('guildMemberRemove', member => {
-  ESBot.channels.find('name', 'logs').send(joinLeftEmbed.left(member.nickname))
+  ESBot.channels.find('name', 'bot').send(joinLeftEmbed.left(member.nickname))
 })
 ESBot.on('message', message => {
   CM.messageHandler(message)
