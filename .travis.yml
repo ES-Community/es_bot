@@ -7,5 +7,7 @@ node_js:
 install:
   - npm install
 after_success:
+  - docker build .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t xstoudi/es-bot .
   - docker push xstoudi/es-bot
