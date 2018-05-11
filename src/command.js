@@ -1,8 +1,6 @@
-// Require Node.JS Dependencies
-const events = require('events')
-
-// Require NPM Dependencies
+const Event = require('events')
 const is = require('@sindresorhus/is')
+const config = require('../config/prod.json')
 
 /**
  * @class CommandManager
@@ -11,13 +9,25 @@ const is = require('@sindresorhus/is')
  *
  * @property {Map<String,Function>} commandsRegistery
  */
-class CommandManager extends events {
+class CommandManager extends Event {
   /**
    * @constructor
    */
   constructor () {
     super()
     this.commandsRegistery = new Map()
+  }
+
+  /**
+   * @public
+   * @method init
+   * @desc Init the command manager
+   * @memberof CommandManager#
+   * @return {CommandManager}
+   */
+  static init () {
+    CommandManager.i = new CommandManager()
+    return CommandManager.i
   }
 
   /**
@@ -58,8 +68,8 @@ class CommandManager extends events {
 
   /**
    * @public
-   * @method getRegisteredCommands
-   * @desc Get the list of all commands registered
+   * @method handle
+   * @desc Emit the message handle
    * @memberof CommandManager#
    *
    * @param {!Object} message message to handle
@@ -70,6 +80,31 @@ class CommandManager extends events {
    */
   handle (message, commandName, args) {
     this.emit(`command_${commandName}`, { message, args })
+  }
+
+  /**
+   * @public
+   * @method messageHandler
+   * @desc Handle the message
+   * @memberof CommandManager#
+   *
+   * @param {!Object} message message to handle
+   *
+   * @return {void}
+   */
+  messageHandler (message) {
+    const {
+      content
+    } = message
+    if (content[0] === config.command_char) {
+      try {
+        const [, cmd, argStr] = /^!([a-z]+)\s*(.*)/.exec(content)
+
+        return CommandManager.i.handle(message, cmd, argStr.split(' ').filter((val) => val !== ''))
+      } catch (error) {
+        return console.error(error)
+      }
+    }
   }
 }
 
