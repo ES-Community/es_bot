@@ -7,7 +7,7 @@ const ruleLiens = require('./src/rules/liens')
 const docCmd = require('./src/commands/doc')
 const helpCmd = require('./src/commands/help')
 const welcomeEmbed = require('./src/embeds/welcome')
-const joinLeftEmbed = require('./src/embeds/welcome')
+const joinLeftEmbed = require('./src/embeds/join-left')
 
 const CM = CommandManager.init()
 CM.addCommand('doc', docCmd)
@@ -26,10 +26,10 @@ ESBot.on('ready', () => {
 
 ESBot.on('guildMemberAdd', member => {
   member.send(welcomeEmbed)
-  ESBot.channels.find('name', 'bot').send(joinLeftEmbed.join(member.nickname))
+  ESBot.channels.find('name', 'logs').send(joinLeftEmbed.join(member.displayName))
 })
 ESBot.on('guildMemberRemove', member => {
-  ESBot.channels.find('name', 'bot').send(joinLeftEmbed.left(member.nickname))
+  ESBot.channels.find('name', 'logs').send(joinLeftEmbed.left(member.displayName))
 })
 ESBot.on('message', message => {
   CM.messageHandler(message)
