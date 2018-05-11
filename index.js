@@ -19,11 +19,7 @@ RM.on(ruleLiens.channelName, ruleLiens.handler)
 const ESBot = new Discord.Client()
 
 ESBot.on('ready', () => {
-  const { channels } = ESBot
-
-  TwitterPlugin.init(channels.find('name', 'tweets'))
-
-  ESBot.guilds.first().members.find('nickname', 'Xavier').send(welcomeEmbed)
+  TwitterPlugin.init(ESBot.channels.find('name', 'tweets'))
 
   console.log('ES Bot up and ready')
 })
@@ -37,8 +33,7 @@ ESBot.on('guildMemberRemove', member => {
 })
 ESBot.on('message', message => {
   CM.messageHandler(message)
-  const channelName = message.channel.name
-  RM.emit(channelName, message.content)
+  RM.emit(message.channel.name, message)
 })
 ESBot.on('messageUpdate', message => {
   CM.messageHandler(message)
