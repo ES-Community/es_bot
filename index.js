@@ -3,7 +3,6 @@ const Discord = require('discord.js')
 
 const CommandManager = require('./src/command')
 const TwitterPlugin = require('./src/plugin/twitter')
-const ruleLiens = require('./src/rules/liens')
 const docCmd = require('./src/commands/doc')
 const helpCmd = require('./src/commands/help')
 const welcomeEmbed = require('./src/embeds/welcome')
@@ -14,7 +13,6 @@ CM.addCommand('doc', docCmd)
 CM.addCommand('help', helpCmd)
 
 const RM = new Event()
-RM.on(ruleLiens.channelName, ruleLiens.handler)
 
 const ESBot = new Discord.Client()
 
@@ -37,8 +35,7 @@ ESBot.on('message', message => {
 })
 ESBot.on('messageUpdate', message => {
   CM.messageHandler(message)
-  const channelName = message.channel.name
-  RM.emit(channelName, message.content)
+  RM.emit(message.channel.name, message)
 })
 ESBot.login(process.env.DISCORD_TOKEN)
 
