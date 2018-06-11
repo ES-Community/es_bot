@@ -16,7 +16,7 @@ const RM = new Event()
 
 const ESBot = new Discord.Client()
 
-ESBot.on('ready', () => {
+ESBot.once('ready', () => {
   TwitterPlugin.init(ESBot.channels.find('name', 'tweets'))
 
   console.log('ES Bot up and ready')
