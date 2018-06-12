@@ -117,5 +117,8 @@
     "hapijs",
     "StrongLoop",
     "JSKongress"
-  ]
+  ],
+  "subscriber": {
+    "dbPath": "db/subscriber.json"
+  }
 }

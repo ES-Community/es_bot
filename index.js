@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const Event = require('events')
 const Discord = require('discord.js')
 
@@ -5,12 +7,14 @@ const CommandManager = require('./src/command')
 const TwitterPlugin = require('./src/plugin/twitter')
 const docCmd = require('./src/commands/doc')
 const helpCmd = require('./src/commands/help')
+const subscriberCmd = require('./src/commands/subscriber')
 const welcomeEmbed = require('./src/embeds/welcome')
 const joinLeftEmbed = require('./src/embeds/join-left')
 
 const CM = CommandManager.init()
 CM.addCommand('doc', docCmd)
 CM.addCommand('help', helpCmd)
+CM.addCommand('subscribe', subscriberCmd.subscribe)
 
 const RM = new Event()
 
