@@ -52,6 +52,7 @@ module.exports.unsubscribe = ({
 }) => {
   if (args.length === 0) {
     const subscribedChannel = subs.findOne({
+      userId: message.author.id,
       channel: message.channel.name
     })
     if (subscribedChannel !== null) {
