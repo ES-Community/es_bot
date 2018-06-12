@@ -2,8 +2,15 @@ const Loki = require('lokijs')
 const path = require('path')
 const config = require('../../config/prod.json')
 
-const db = new Loki(path.join(__dirname, config.subscriber.dbPath))
-const subs = db.addCollection('subscribers')
+const dbPath = path.join(path.dirname(require.main.filename), config.subscriber.dbPath)
+const db = new Loki(dbPath, {
+  autoload: true,
+  autosave: true,
+  loadCallback: () => {
+    subs = db.getCollection('subscribers')
+  }
+})
+let subs = db.addCollection('subscribers')
 
 const subscribe = (id, channel) => {
   subs.insert({

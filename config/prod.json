@@ -119,6 +119,6 @@
     "JSKongress"
   ],
   "subscriber": {
-    "dbPath": "db/subscriber.json"
+    "dbPath": "db/subscriber.db"
   }
 }
