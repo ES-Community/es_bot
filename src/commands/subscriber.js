@@ -49,7 +49,7 @@ module.exports.unsubscribe = ({
     })
     if (subscribedChannel !== null) {
       subs.remove(subscribedChannel)
-      return message.channel.send(`${message.author.username} has subscribed to the channel \`#${message.channel.name}\``)
+      return message.channel.send(`${message.author.username} has unsubscribed to the channel \`#${message.channel.name}\``)
     }
     return message.channel.send(`${message.author.username} hasn't subscribed to the channel \`#${message.channel.name}\``)
   }
