@@ -3,11 +3,13 @@ const path = require('path')
 const config = require('../../config/prod.json')
 
 const dbPath = path.join(path.dirname(require.main.filename), config.subscriber.dbPath)
+
 const db = new Loki(dbPath, {
   autoload: true,
   autosave: true,
   autoloadCallback: () => {
     subs = db.getCollection('subscribers')
+    if (subs === null) subs = db.addCollection('subscribers')
   }
 })
 
