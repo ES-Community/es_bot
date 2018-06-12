@@ -22,20 +22,26 @@ module.exports.subscribe = ({
       channel: message.channel.name
     })
     if (subscribedChannel !== null) {
-      return message.channel.send(`${message.author.username} already have subscribed to the channel \`#${message.channel.name}\``)
+      message.author.send(`Vous êtes déjà abonné au channel \`#${message.channel.name}\``)
+      return message.delete()
     }
     subs.insert({
       userId: message.author.id,
       channel: message.channel.name
     })
-    return message.channel.send(`${message.author.username} has subscribed to the channel \`#${message.channel.name}\``)
+    message.author.send(`Vous vous êtes abonné au channel \`#${message.channel.name}\``)
+    return message.delete()
   }
   if (args[0] === 'list') {
     const subscribedChannels = subs.find({
       userId: message.author.id
     })
-    if (subscribedChannels.length === 0) return message.channel.send('You haven\'t subscribed to a channel')
-    return message.channel.send(`${message.author.username} has subscribed to this channels :\n${subscribedChannels.map(a => `\`#${a.channel}\``).join('\n')}`)
+    if (subscribedChannels.length === 0) {
+      message.author.send(`Vous n'êtes abonné à aucun channel`)
+      return message.delete()
+    }
+    message.author.send(`Vous êtes abonnés aux channels suivants :\n${subscribedChannels.map(a => `\`#${a.channel}\``).join('\n')}`)
+    return message.delete()
   }
 }
 
@@ -49,9 +55,11 @@ module.exports.unsubscribe = ({
     })
     if (subscribedChannel !== null) {
       subs.remove(subscribedChannel)
-      return message.channel.send(`${message.author.username} has unsubscribed to the channel \`#${message.channel.name}\``)
+      message.author.send(`Vous vous êtes désabonné au channel \`#${message.channel.name}\``)
+      return message.delete()
     }
-    return message.channel.send(`${message.author.username} hasn't subscribed to the channel \`#${message.channel.name}\``)
+    message.author.send(`Vous n'êtes pas abonné au channel \`#${message.channel.name}\``)
+    return message.delete()
   }
 }
 
@@ -60,14 +68,16 @@ module.exports.alert = ({
   args
 }) => {
   if (args.length === 0) {
-    return message.channel.send(`Please, add a message.`)
+    message.author.send(`Veuillez mettre un message à votre alert : \`!alert <message>\` `)
+    return message.delete()
   }
   const subscribersOnChannel = subs.find({
     channel: message.channel.name
   })
   if (subscribersOnChannel.length === 0) {
-    return message.channel.send(`There is no subscribers for this channel.`)
+    message.channel.send(`${args.join(' ')}\nIl n'y a pas d'abonné à ce channel...`)
+    return message.delete()
   }
-  return message.channel.send(`${args.join(' ')}
-  ${subscribersOnChannel.map(sub => `<@${sub.userId}>`).join(', ')}`)
+  message.channel.send(`${args.join(' ')}\n${subscribersOnChannel.map(sub => `<@${sub.userId}>`).join(', ')}`)
+  return message.delete()
 }
