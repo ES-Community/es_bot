@@ -1,8 +1,6 @@
 const Loki = require('lokijs')
-const path = require('path')
-const config = require('../../config/prod.json')
 
-const dbPath = path.join(path.dirname(require.main.filename), config.subscriber.dbPath)
+const dbPath = process.env.LOKI_DB_PATH
 
 const db = new Loki(dbPath, {
   autoload: true,
