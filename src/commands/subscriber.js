@@ -35,7 +35,7 @@ module.exports.subscribe = ({
       userId: message.author.id
     })
     if (subscribedChannels.length === 0) return message.channel.send('You haven\'t subscribed to a channel')
-    return message.channel.send(`You have subscribed to this channels :\n${subscribedChannels.map(a => `\`#${a.channel}\``).join('\n')}`)
+    return message.channel.send(`${message.author.username} has subscribed to this channels :\n${subscribedChannels.map(a => `\`#${a.channel}\``).join('\n')}`)
   }
 }
 
