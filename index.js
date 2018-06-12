@@ -18,6 +18,7 @@ CM.addCommand('subscribe', subscriberCmd.subscribe)
 CM.addCommand('sub', subscriberCmd.subscribe)
 CM.addCommand('unsubscribe', subscriberCmd.unsubscribe)
 CM.addCommand('unsub', subscriberCmd.unsubscribe)
+CM.addCommand('alert', subscriberCmd.alert)
 
 const RM = new Event()
 
