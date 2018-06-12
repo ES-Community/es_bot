@@ -25,6 +25,10 @@ class TwitterPlugin {
    * @return {CommandManager}
    */
   static init (channel) {
+    if (TwitterPlugin.initialized === true) {
+      return
+    }
+    TwitterPlugin.initialized = true;
     TwitterPlugin.channel = channel
     TwitterPlugin.twitterNames = new Set(config.twitter_users)
 
