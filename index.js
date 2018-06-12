@@ -15,6 +15,9 @@ const CM = CommandManager.init()
 CM.addCommand('doc', docCmd)
 CM.addCommand('help', helpCmd)
 CM.addCommand('subscribe', subscriberCmd.subscribe)
+CM.addCommand('sub', subscriberCmd.subscribe)
+CM.addCommand('unsubscribe', subscriberCmd.unsubscribe)
+CM.addCommand('unsub', subscriberCmd.unsubscribe)
 
 const RM = new Event()
 
