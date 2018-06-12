@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const Event = require('events')
 const Discord = require('discord.js')
 
