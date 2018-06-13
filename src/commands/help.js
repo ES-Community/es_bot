@@ -2,5 +2,6 @@ const CommandManager = require('../command')
 
 module.exports = ({ message }) => {
   const commands = [...CommandManager.i.getRegisteredCommands()]
-  message.channel.send(`All commands available are:\n!${commands.join('\n!')}`)
+  message.author.send(`Commandes disponibles : \n!${commands.join('\n!')}`)
+  return message.delete()
 }
