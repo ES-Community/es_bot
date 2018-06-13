@@ -69,7 +69,7 @@ module.exports.alert = ({
   message,
   args
 }) => {
-  if (message.member.roles.find("name", "Mentor")) {
+  if (!message.member.roles.find("name", "Mentor")) {
     return message.delete()    
   }
   if (args.length === 0) {
