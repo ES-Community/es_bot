@@ -69,6 +69,9 @@ module.exports.alert = ({
   message,
   args
 }) => {
+  if (message.author.roles.find("name", "Mentor")) {
+    return message.delete()    
+  }
   if (args.length === 0) {
     message.author.send(`Veuillez mettre un message à votre alert : \`!alert <message>\` `)
     return message.delete()
