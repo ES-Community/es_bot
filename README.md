@@ -20,3 +20,6 @@ LOKI_DB_PATH=
 - help
 - doc
 - feedtweeter
+- subscribe [list]
+- unsubscribe
+- alert
