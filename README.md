@@ -12,6 +12,7 @@ TWITTER_CONSUMER_KEY=
 TWITTER_CONSUMER_SECRET=
 TWITTER_ACCESS_TOKEN=
 TWITTER_ACCESS_TOKEN_SECRET=
+LOKI_DB_PATH=
 ```
 
 ## Commands available
@@ -19,3 +20,6 @@ TWITTER_ACCESS_TOKEN_SECRET=
 - help
 - doc
 - feedtweeter
+- subscribe [list]
+- unsubscribe
+- alert
