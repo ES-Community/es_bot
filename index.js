@@ -8,6 +8,7 @@ const helpCmd = require('./src/commands/help')
 const subscriberCmd = require('./src/commands/subscriber')
 const welcomeEmbed = require('./src/embeds/welcome')
 const joinLeftEmbed = require('./src/embeds/join-left')
+const Anniversary = require('./src/plugin/anniversary')
 
 const CM = CommandManager.init()
 CM.addCommand('doc', docCmd)
@@ -24,7 +25,7 @@ const ESBot = new Discord.Client()
 
 ESBot.once('ready', () => {
   TwitterPlugin.init(ESBot.channels.find('name', 'tweets'))
-
+  Anniversary.init(ESBot.guilds.first())
   console.log('ES Bot up and ready')
 })
 
