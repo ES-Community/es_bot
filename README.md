@@ -15,6 +15,8 @@ TWITTER_ACCESS_TOKEN_SECRET=
 LOKI_DB_PATH=
 ```
 
+You need to enable 2FA if you are the server owner and if you want roles management.
+
 ## Commands available
 
 - help

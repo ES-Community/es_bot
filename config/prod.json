@@ -1,5 +1,11 @@
 {
   "command_char": "!",
+  "roles": {
+    "owner" : "Fondateur",
+    "moderator": "Mentor",
+    "member": "Communauté",
+    "reported" : "Signalé"
+  },
   "twitter_feeds": [
     "nodejs",
     "node_js",
