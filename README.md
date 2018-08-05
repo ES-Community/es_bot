@@ -23,3 +23,5 @@ LOKI_DB_PATH=
 - subscribe [list]
 - unsubscribe
 - alert
+- report
+- unlock

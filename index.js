@@ -6,6 +6,7 @@ const TwitterPlugin = require('./src/plugin/twitter')
 const docCmd = require('./src/commands/doc')
 const helpCmd = require('./src/commands/help')
 const subscriberCmd = require('./src/commands/subscriber')
+const reportCmd = require('./src/commands/report')
 const welcomeEmbed = require('./src/embeds/welcome')
 const joinLeftEmbed = require('./src/embeds/join-left')
 
@@ -17,6 +18,8 @@ CM.addCommand('sub', subscriberCmd.subscribe)
 CM.addCommand('unsubscribe', subscriberCmd.unsubscribe)
 CM.addCommand('unsub', subscriberCmd.unsubscribe)
 CM.addCommand('alert', subscriberCmd.alert)
+CM.addCommand('report', reportCmd.report)
+CM.addCommand('unlock', reportCmd.unlock)
 
 const RM = new Event()
 
