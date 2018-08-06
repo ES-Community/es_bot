@@ -19,7 +19,6 @@ CM.addCommand('unsubscribe', subscriberCmd.unsubscribe)
 CM.addCommand('unsub', subscriberCmd.unsubscribe)
 CM.addCommand('alert', subscriberCmd.alert)
 CM.addCommand('report', reportCmd.report)
-CM.addCommand('unlock', reportCmd.unlock)
 
 const RM = new Event()
 

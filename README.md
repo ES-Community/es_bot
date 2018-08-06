@@ -26,4 +26,3 @@ You need to enable 2FA if you are the server owner and if you want roles managem
 - unsubscribe
 - alert
 - report
-- unlock
