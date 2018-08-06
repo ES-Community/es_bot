@@ -30,12 +30,8 @@ module.exports.report = ({
 
   reportedUser.addRole(message.guild.roles.find('name', config.roles.reported)).then(() => {
     reportedUser.send(`[SIGNALEMENT] Vous avez été signalé par \`${message.author.tag}\` pour la raison suivante :\n${reason.join(' ')}\nVeuillez contacter un mentor pour réclamation.`)
-    message.guild.members
-      .filter(m => m.roles.find('name', config.roles.moderator) !== null)
-      .array().forEach(m =>
-        m.send(`[SIGNALEMENT] \`${message.author.tag}\` a signalé \`${reportedUser.user.tag}\` pour la raison suivante :\n${reason.join(' ')}`)
-      )
-    message.author.send(`L'utilisateur \`${reportedUser.user.tag}\` a été signaler pour la raison suivante :\n${reason.join(' ')}`)
+    message.channels.find('name', 'mentors').send(`[SIGNALEMENT] \`${message.author.tag}\` a signalé \`${reportedUser.user.tag}\` pour la raison suivante :\n${reason.join(' ')}`)
+    message.author.send(`L'utilisateur \`${reportedUser.user.tag}\` a été signalé pour la raison suivante :\n${reason.join(' ')}`)
     message.delete()
   }).catch(e => {
     message.author.send('Impossible de signaler un utilisateur actuellement.')
