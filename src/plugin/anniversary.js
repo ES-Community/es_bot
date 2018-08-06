@@ -14,7 +14,8 @@ class AnniversaryPlugin {
    * @param {Guild} guild Server where to apply the plugin
    */
   static init (guild) {
-    cron.schedule('0 0 10 * * *', () => {
+    // every day at 10am
+    cron.schedule('0 10 * * *', () => {
       guild.members
         .filter(m => !m.user.bot && AnniversaryPlugin.isToday(m.joinedAt))
         .array().forEach(m => {
@@ -23,7 +24,7 @@ class AnniversaryPlugin {
             guild.channels.find('name', 'annonces').send(`La communauté fête ses ${age} ans !`)
           }
           if (age === 1) m.send(':birthday: Déjà 1 an que tu es sur la communauté ! :vulcan:')
-          m.send(`:birthday: La viellesse arrive, ça fait ${age} ans que tu es arrivé sur l'ESCommunity :vulcan:`)
+          else m.send(`:birthday: La viellesse arrive, ça fait ${age} ans que tu es arrivé sur l'ESCommunity :vulcan:`)
         })
     })
   }
