@@ -14,12 +14,12 @@ module.exports.report = ({
   }
   const userMatch = userString.match(/<@!?(\d{18})>/)
   if (userMatch === null) {
-    message.author.send(`Vous devez spécifier un utilisateur en le référançant avec \`@username\` pour le signaler.`)
+    message.author.send(`Vous devez spécifier un utilisateur avec \`@username\` pour le signaler.`)
     return message.delete()
   }
   const reportedUser = message.guild.members.find('id', userMatch[1])
   if (reportedUser === null) {
-    message.author.send(`L'utilisateur avec l'id \`${userMatch[1]}\` n'a pas été trouvé dans la liste de membre`)
+    message.author.send(`L'utilisateur avec l'id \`${userMatch[1]}\` n'a pas été trouvé dans la liste des membres.`)
     return message.delete()
   }
   if (reportedUser.roles.find('name', config.roles.moderator) !== null) {
@@ -29,7 +29,7 @@ module.exports.report = ({
   }
 
   reportedUser.addRole(message.guild.roles.find('name', config.roles.reported)).then(() => {
-    reportedUser.send(`[SIGNALEMENT] Vous avez été signalé par \`${message.author.tag}\` pour la raison suivante :\n${reason.join(' ')}\nVeuillez contacter un mentor pour réclamation`)
+    reportedUser.send(`[SIGNALEMENT] Vous avez été signalé par \`${message.author.tag}\` pour la raison suivante :\n${reason.join(' ')}\nVeuillez contacter un mentor pour réclamation.`)
     message.guild.members
       .filter(m => m.roles.find('name', config.roles.moderator) !== null)
       .array().forEach(m =>
@@ -49,7 +49,7 @@ module.exports.unlock = ({
   args: [userString, ...args]
 }) => {
   if (message.member.roles.find('name', config.roles.moderator) === null) {
-    message.author.send(`Vous devez être un mentor pour déblocker un utilisateur.`)
+    message.author.send(`Vous devez être un mentor pour débloquer un utilisateur.`)
     return message.delete()
   }
   if (userString === undefined) {
@@ -58,12 +58,12 @@ module.exports.unlock = ({
   }
   const userMatch = userString.match(/<@!?(\d{18})>/)
   if (userMatch === null) {
-    message.author.send(`Vous devez spécifier un utilisateur en le référançant avec \`@username\`.`)
+    message.author.send(`Vous devez spécifier un utilisateur avec \`@username\`.`)
     return message.delete()
   }
   const reportedUser = message.guild.members.find('id', userMatch[1])
   if (reportedUser === null) {
-    message.author.send(`L'utilisateur avec l'id \`${userMatch[1]}\` n'a pas été trouvé dans la liste de membre`)
+    message.author.send(`L'utilisateur avec l'id \`${userMatch[1]}\` n'a pas été trouvé dans la liste des membres.`)
     return message.delete()
   }
   if (!reportedUser.roles.exists('name', config.roles.reported)) {
