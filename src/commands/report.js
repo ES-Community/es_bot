@@ -1,4 +1,5 @@
 const config = require('../../config/prod.json')
+const reportEmbed = require('../embeds/report')
 
 module.exports.report = ({
   message,
@@ -29,9 +30,10 @@ module.exports.report = ({
   }
 
   reportedUser.addRole(message.guild.roles.find('name', config.roles.reported)).then(() => {
-    reportedUser.send(`[SIGNALEMENT] Vous avez été signalé par \`${message.author.tag}\` pour la raison suivante :\n${reason.join(' ')}\nVeuillez contacter un mentor pour réclamation.`)
-    message.channels.find('name', 'mentors').send(`[SIGNALEMENT] \`${message.author.tag}\` a signalé \`${reportedUser.user.tag}\` pour la raison suivante :\n${reason.join(' ')}`)
-    message.author.send(`L'utilisateur \`${reportedUser.user.tag}\` a été signalé pour la raison suivante :\n${reason.join(' ')}`)
+    const embed = () => reportEmbed(message, reportedUser, reason.join(' '))
+    reportedUser.send(embed())
+    message.guild.channels.find('name', 'mentors').send(embed())
+    message.author.send(embed())
     message.delete()
   }).catch(e => {
     message.author.send('Impossible de signaler un utilisateur actuellement.')
