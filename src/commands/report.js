@@ -32,7 +32,9 @@ module.exports.report = ({
   reportedUser.addRole(message.guild.roles.find('name', config.roles.reported)).then(() => {
     const embed = () => reportEmbed(message, reportedUser, reason.join(' '))
     reportedUser.send(embed())
-    message.guild.channels.find('name', 'mentors').send(embed())
+    const modoChan = message.guild.channels.find('name', 'mentors')
+    modoChan.send(embed())
+    modoChan.send('@here')
     message.author.send(embed())
     message.delete()
   }).catch(e => {
