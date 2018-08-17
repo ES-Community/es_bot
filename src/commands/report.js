@@ -29,13 +29,14 @@ module.exports.report = ({
     return message.delete()
   }
 
-  reportedUser.addRole(message.guild.roles.find('name', config.roles.reported)).then(() => {
+  reportedUser.addRole(message.guild.roles.find('name', config.roles.reported)).then(async () => {
     const embed = () => reportEmbed(message, reportedUser, reason.join(' '))
-    reportedUser.send(embed())
+
+    reportedUser.send(await embed())
     const modoChan = message.guild.channels.find('name', 'mentors')
-    modoChan.send(embed())
+    modoChan.send(await embed())
     modoChan.send('@here')
-    message.author.send(embed())
+    message.author.send(await embed())
     message.delete()
   }).catch(e => {
     message.author.send('Impossible de signaler un utilisateur actuellement.')
