@@ -21,6 +21,6 @@ module.exports = async (message, reportedUser, reason) => new Discord.RichEmbed(
             minute: '2-digit'
           })
       }\` ${m.cleanContent}`)
-      .join('\n') || '`Aucun message` :think:'
+      .join('\n') || '`Aucun message` :thinking:'
   )
   .setTimestamp(new Date(message.createdTimestamp).toISOString())
