@@ -1,12 +1,13 @@
-# Installation & Usage
+# Installation
 
-```
+```shell
 npm install
 npm start
 ```
 
-Config settings in /config/prod.json and set the following env var:
-```
+Modifier la configuration se trouvant dans  `config/prod.json` puis définir les variables d'environnment suivantes:
+
+```env
 DISCORD_TOKEN=
 TWITTER_CONSUMER_KEY=
 TWITTER_CONSUMER_SECRET=
@@ -15,9 +16,9 @@ TWITTER_ACCESS_TOKEN_SECRET=
 LOKI_DB_PATH=
 ```
 
-## Available commands (Liste des commandes du bot)
+## Liste des commandes du bot
 
-> Les commandes doivent être prefixer d'un point d'exclamation, par exemple `!help`
+> Les commandes doivent être préfixée d'un point d'exclamation, par exemple `!help`
 
 Certaines commandes sont réservées aux mentors de la communauté (la case mentor sera donc égal à oui si la commande leur est réservée).
 
