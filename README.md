@@ -18,7 +18,7 @@ LOKI_DB_PATH=
 
 ## Liste des commandes du bot
 
-> Les commandes doivent être préfixée d'un point d'exclamation, par exemple `!help`
+> Les commandes doivent être préfixées d'un point d'exclamation, par exemple `!help`
 
 Certaines commandes sont réservées aux mentors de la communauté (la case mentor sera donc égal à oui si la commande leur est réservée).
 
