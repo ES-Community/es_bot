@@ -1,32 +1,28 @@
-const Loki = require('lokijs')
+const NoDB = require('nodbstore')
+const NoDBStoreGist = require('nodbstore-gist')
 
-const dbPath = process.env.LOKI_DB_PATH
-
-const db = new Loki(dbPath, {
-  autoload: true,
-  autosave: true,
-  autoloadCallback: () => {
-    subs = db.getCollection('subscribers')
-    if (subs === null) subs = db.addCollection('subscribers')
-  }
+const db = new NoDB()
+const store = new NoDBStoreGist({
+  name: 'subscriber'
 })
 
-let subs = null
+db.addStore(store)
+store.load().then(() => console.log('Database loaded'))
 
 module.exports.subscribe = ({
   message,
   args
 }) => {
   if (args.length === 0) {
-    const subscribedChannel = subs.findOne({
-      userId: message.author.id,
-      channel: message.channel.name
-    })
+    const subscribedChannel = db.findOne(s => (
+      s.userId === message.author.id &&
+      s.channel === message.channel.name
+    ))
     if (subscribedChannel !== null) {
       message.author.send(`Vous êtes déjà abonné au channel \`#${message.channel.name}\``)
       return message.delete()
     }
-    subs.insert({
+    db.put({
       userId: message.author.id,
       channel: message.channel.name
     })
@@ -34,9 +30,9 @@ module.exports.subscribe = ({
     return message.delete()
   }
   if (args[0] === 'list') {
-    const subscribedChannels = subs.find({
-      userId: message.author.id
-    })
+    const subscribedChannels = db.find(s => (
+      s.userId === message.author.id
+    ))
     if (subscribedChannels.length === 0) {
       message.author.send(`Vous n'êtes abonné à aucun channel`)
       return message.delete()
@@ -51,12 +47,12 @@ module.exports.unsubscribe = ({
   args
 }) => {
   if (args.length === 0) {
-    const subscribedChannel = subs.findOne({
-      userId: message.author.id,
-      channel: message.channel.name
-    })
+    const subscribedChannel = db.findOne(s => (
+      s.userId === message.author.id &&
+      s.channel === message.channel.name
+    ))
     if (subscribedChannel !== null) {
-      subs.remove(subscribedChannel)
+      db.remove(subscribedChannel._id)
       message.author.send(`Vous vous êtes désabonné au channel \`#${message.channel.name}\``)
       return message.delete()
     }
@@ -69,16 +65,16 @@ module.exports.alert = ({
   message,
   args
 }) => {
-  if (!message.member.roles.find("name", "Mentor")) {
-    return message.delete()    
-  }
-  if (args.length === 0) {
-    message.author.send(`Veuillez mettre un message à votre alert : \`!alert <message>\` `)
+  if (!message.member.roles.find('name', 'Mentor')) {
     return message.delete()
   }
-  const subscribersOnChannel = subs.find({
-    channel: message.channel.name
-  })
+  if (args.length === 0) {
+    message.author.send(`Veuillez mettre un message à votre alerte : \`alert <message>\` `)
+    return message.delete()
+  }
+  const subscribersOnChannel = db.find(s => (
+    s.channel === message.channel.name
+  ))
   if (subscribersOnChannel.length === 0) {
     message.channel.send(`${args.join(' ')}\nIl n'y a pas d'abonné à ce channel...`)
     return message.delete()
