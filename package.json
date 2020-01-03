@@ -1,27 +1,26 @@
 {
-  "name": "escommunity_bot",
-  "version": "1.2.0",
-  "description": "ES Community bot",
-  "main": "index.js",
+  "name": "escape",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/core.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node .",
+    "build": "tsc",
+    "build:watch": "tsc -w"
   },
-  "author": "ES-Community",
+  "keywords": [],
+  "author": "Xavier Stouder <xavier@stouder.io>",
   "license": "MIT",
   "dependencies": {
-    "@sindresorhus/is": "^0.9.0",
-    "discord.js": "^11.3.2",
-    "twit": "^2.2.9"
+    "@types/lodash.clonedeep": "^4.5.6",
+    "discord.js": "^11.5.1",
+    "lodash.clonedeep": "^4.5.0",
+    "toml": "^3.0.0",
+    "twit": "^2.2.11",
+    "typescript": "^3.7.4"
   },
   "devDependencies": {
-    "@escommunity/minami": "^1.0.0",
-    "ava": "^0.25.0",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.1.0"
+    "@types/node": "^13.1.2",
+    "@types/twit": "^2.2.23"
   }
 }
