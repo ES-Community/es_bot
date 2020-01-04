@@ -5,12 +5,24 @@ npm install
 npm start
 ```
 
-Fill required `token` fields in /config/prod.json (all informations should be available on your Discord BOT page).
+Config settings in /config/prod.json and set the following env var:
+```
+DISCORD_TOKEN=
+TWITTER_CONSUMER_KEY=
+TWITTER_CONSUMER_SECRET=
+TWITTER_ACCESS_TOKEN=
+TWITTER_ACCESS_TOKEN_SECRET=
+LOKI_DB_PATH=
+```
+
+You need to enable 2FA if you are the server owner and if you want roles management.
 
 ## Commands available
 
 - help
-- addrole
-- delrole
 - doc
 - feedtweeter
+- subscribe [list]
+- unsubscribe
+- alert
+- report
