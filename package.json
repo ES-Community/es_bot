@@ -4,7 +4,7 @@
   "description": "ES Community bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "start": "node index.js"
   },
   "author": "ES-Community",
@@ -12,11 +12,12 @@
   "dependencies": {
     "@sindresorhus/is": "^0.9.0",
     "discord.js": "^11.3.2",
+    "nodbstore": "0.0.2",
+    "nodbstore-gist": "0.0.2",
     "twit": "^2.2.9"
   },
   "devDependencies": {
     "@escommunity/minami": "^1.0.0",
-    "ava": "^0.25.0",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
